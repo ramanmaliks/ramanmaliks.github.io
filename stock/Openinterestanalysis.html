@@ -9,24 +9,30 @@
     <style type="text/css">
 		@page { margin: 2cm }
 		p { margin-bottom: 0.25cm; background: transparent }
-		div.main {
+		div.col-main {
       font-family: Calibri, sans-serif;
 
       position: relative;
     }
-      div.cont { 
-      position: absolute;
-      border: 3px solid #73AD21;
-      width: 70%; 
+      div.col-cont { 
+      position: relative;
+      
+      width: 90%; 
   		top: 50%;
-      left: 15%;
+      left: 5%;
       
     }
+      @media only screen and (max-width: 600px) {
+  /* For mobile phones: */
+  [class*="col-"] {
+    width: 50%;
+  }
+}
     </style>
   </head>
   <body dir="ltr" lang="en-us">
-    <div class="main" width="100%" lang="en-us">
-      <div class="cont" lang="en-us">
+    <div class="col-main" width="100%" lang="en-us">
+      <div class="col-cont" lang="en-us">
         <h1> Open Interest Analysis </h1>
         <p><b>Open interest analysis</b> ek important concept hai stock market
           mein.</p>
@@ -68,40 +74,45 @@
           price ke sath OI bhi badh raha hai, toh yeh trend ke continuation ka
           signal ho sakta hai. Lekin agar price gir raha hai aur OI badh raha
           hai, toh yeh possible reversal ka bhi indication ho sakta hai. </div>
-        <div> 
-          <h1>
-            
-          here’s a step-by-step explanation </h1> 
+        <div>
+          <h1> here’s a step-by-step explanation </h1>
           <ul>
-            <li>**Open
-          Interest (OI) kya hai**: - OI ka matlab hai total number of
-          outstanding contracts (futures or options) jo abhi tak settle nahi
-          huye hain. Yeh batata hai kitne contracts actively hold kiye ja rahe
-              hain.</li> <li>2. **OI badhne ka matlab**: - Jab OI badhta hai, iska matlab
-          zyada traders market mein enter kar rahe hain aur naye contracts ban
-          rahe hain. Yeh trading activity aur market participation ko dikhata
-            hai. </li> <li>3. **Steps mein samajhna**: </li><ul>
-            
-            <li>1. **Price aur OI dono badh rahe
-          hain**: - Agar kisi stock ya futures ka price bhi badh raha hai aur OI
-          bhi badh raha hai, toh iska matlab market bullish (uptrend) hai.
-          Traders expect kar rahe hain ki price aur badhega, isliye zyada
-          contracts kharid rahe hain.</li> <li> 2. **Price gir raha hai, OI badh raha
-          hai**: - Agar price gir raha hai lekin OI badh raha hai, toh yeh
-          bearish (downtrend) indication ho sakta hai. Matlab zyada traders
-          short positions le rahe hain, expect kar rahe hain ki price aur
-          girega. </li><li>3. **Price aur OI dono gir rahe hain**: - Agar price aur OI
-          dono gir rahe hain, toh iska matlab hai ki market mein interest kam ho
-          raha hai. Traders apni positions close kar rahe hain, aur market se
-          exit ho rahe hain.</li><li> 4. **Price badh raha hai, OI gir raha hai**: - Agar
-          price badh raha hai lekin OI gir raha hai, toh yeh possible reversal
-          indication hai. Matlab ki existing traders apni positions close kar
-            rahe hain, aur naye traders market mein nahi aa rahe hain.</li></ul> <li>4. **OI
-          analysis ka use**: - OI ko price ke sath compare karke traders yeh
-          samajh sakte hain ki market ka sentiment kya hai, aur future price
-          movements ka prediction kar sakte hain. Yeh ek important tool hai
-          technical analysis mein. Yeh steps follow karke aap OI ke badhne ka
-            impact aur market sentiment ko better samajh sakte hain.</li></ul> </div>
+            <li><b>Open Interest (OI) kya hai</b>: - OI ka matlab hai total
+              number of outstanding contracts (futures or options) jo abhi tak
+              settle nahi huye hain. Yeh batata hai kitne contracts actively
+              hold kiye ja rahe hain.</li>
+            <li><b>OI badhne ka matlab</b>: - Jab OI badhta hai, iska matlab
+              zyada traders market mein enter kar rahe hain aur naye contracts
+              ban rahe hain. Yeh trading activity aur market participation ko
+              dikhata hai. </li>
+            <li><b>Steps mein samajhna</b>: </li>
+            <ul>
+              <li><b>Price aur OI dono badh rahe hain</b>: - Agar kisi stock ya
+                futures ka price bhi badh raha hai aur OI bhi badh raha hai, toh
+                iska matlab market bullish (uptrend) hai. Traders expect kar
+                rahe hain ki price aur badhega, isliye zyada contracts kharid
+                rahe hain.</li>
+              <li><b>Price gir raha hai, OI badh raha hai</b>: - Agar price gir
+                raha hai lekin OI badh raha hai, toh yeh bearish (downtrend)
+                indication ho sakta hai. Matlab zyada traders short positions le
+                rahe hain, expect kar rahe hain ki price aur girega. </li>
+              <li><b>Price aur OI dono gir rahe hain</b>: - Agar price aur OI
+                dono gir rahe hain, toh iska matlab hai ki market mein interest
+                kam ho raha hai. Traders apni positions close kar rahe hain, aur
+                market se exit ho rahe hain.</li>
+              <li><b>Price badh raha hai, OI gir raha hai</b>: - Agar price badh
+                raha hai lekin OI gir raha hai, toh yeh possible reversal
+                indication hai. Matlab ki existing traders apni positions close
+                kar rahe hain, aur naye traders market mein nahi aa rahe hain.</li>
+            </ul>
+            <li><b>OI analysis ka use</b>: - OI ko price ke sath compare karke
+              traders yeh samajh sakte hain ki market ka sentiment kya hai, aur
+              future price movements ka prediction kar sakte hain. Yeh ek
+              important tool hai technical analysis mein. Yeh steps follow karke
+              aap OI ke badhne ka impact aur market sentiment ko better samajh
+              sakte hain.</li>
+          </ul>
+        </div>
       </div>
     </div>
     
