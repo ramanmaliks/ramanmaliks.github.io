@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhan Trading Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0A0E14;
+    --panel: #11161F;
+    --panel-alt: #151B26;
+    --border: #212836;
+    --text: #E7ECF2;
+    --muted: #6E7887;
+    --muted-2: #4B5563;
+    --gain: #33D6A6;
+    --loss: #FF6B81;
+    --accent: #5B8DEF;
+    --amber: #F0B429;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, .display {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Ticker tape ---------- */
+  .ticker-wrap {
+    background: #000;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 9px 0;
+  }
+  .ticker-track {
+    display: inline-block;
+    animation: scroll-left 40s linear infinite;
+  }
+  .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 0 22px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+  }
+  .ticker-item .sym { color: var(--text); font-weight: 500; }
+  .ticker-item .side-B { color: var(--gain); }
+  .ticker-item .side-S { color: var(--loss); }
+  .ticker-item .px { color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header.page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 34px;
+  }
+
+  .eyebrow {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h1 { font-size: 27px; font-weight: 600; }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .status .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted-2);
+  }
+  .status.live .dot { background: var(--gain); box-shadow: 0 0 0 3px rgba(51,214,166,0.15); }
+  .status.err .dot { background: var(--loss); }
+
+  /* ---------- Stat cards ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 780px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+  }
+  .stat-label {
+    font-size: 11.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .stat-sub {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .up { color: var(--gain); }
+  .down { color: var(--loss); }
+
+  /* ---------- Panels ---------- */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-head h2 { font-size: 15px; font-weight: 600; }
+  .panel-head .hint { font-size: 11.5px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .panel-body { padding: 20px; }
+  .chart-holder { position: relative; height: 260px; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ---------- Tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    padding: 0 20px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--panel-alt); }
+  td.num { text-align: right; }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-B { background: rgba(51,214,166,0.12); color: var(--gain); }
+  .pill-S { background: rgba(255,107,129,0.12); color: var(--loss); }
+
+  .table-scroll { max-height: 360px; overflow-y: auto; }
+
+  .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .empty-state .big { font-size: 22px; margin-bottom: 8px; }
+
+  footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--muted-2);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* config banner */
+  #config-banner {
+    background: #241914;
+    border: 1px solid #4A2E1B;
+    color: #F0B429;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    display: none;
+  }
+  #config-banner code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker-track">
+    <div class="ticker-item"><span class="mono">LOADING TICKER…</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div id="config-banner">
+    ⚠ Not configured yet — open <code>index.html</code> and set <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> near the top of the <code>&lt;script&gt;</code> block.
+  </div>
+
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">Dhan · Intraday Options</div>
+      <h1>Trading Dashboard</h1>
+    </div>
+    <div class="status" id="status-pill">
+      <span class="dot"></span><span id="status-text">connecting…</span>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Ledger Balance</div>
+      <div class="stat-value mono" id="stat-balance">—</div>
+      <div class="stat-sub" id="stat-balance-sub">latest recorded</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Net P&amp;L (period)</div>
+      <div class="stat-value mono" id="stat-pnl">—</div>
+      <div class="stat-sub" id="stat-pnl-sub">credits − debits</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Trades</div>
+      <div class="stat-value mono" id="stat-trades">—</div>
+      <div class="stat-sub" id="stat-trades-sub">buy / sell split</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Open Holdings</div>
+      <div class="stat-value mono" id="stat-holdings">—</div>
+      <div class="stat-sub" id="stat-holdings-sub">distinct symbols</div>
+    </div>
+  </section>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Ledger Balance Over Time</h2>
+        <span class="hint" id="ledger-range" title="Column mapping for this table is unconfirmed — verify against your statement">—</span>
+      </div>
+      <div class="panel-body">
+        <div class="chart-holder"><canvas id="chart-balance"></canvas></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Daily P&amp;L</h2>
+        <span class="hint">credit − debit / day</span>
+      </div>
+      <div class="panel-body">
+        <div class="chart-holder"><canvas id="chart-daily"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Recent Trades</h2>
+      <span class="hint" id="trades-count-hint">—</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Symbol</th><th>Side</th><th>Exch</th>
+            <th class="num">Qty</th><th class="num">Avg Price</th><th class="num">Net Amount</th>
+          </tr>
+        </thead>
+        <tbody id="trades-body">
+          <tr><td colspan="7" class="empty-state">Loading trades…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Latest Holdings Snapshot</h2>
+      <span class="hint" id="holdings-date-hint">—</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Symbol</th><th>ISIN</th><th class="num">Opening Qty</th><th class="num">Closing Qty</th></tr>
+        </thead>
+        <tbody id="holdings-body">
+          <tr><td colspan="4" class="empty-state">Loading holdings…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer id="footer-note">Data refreshes on page load, direct from Supabase.</footer>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG — fill these in from your Supabase project:
+   Project Settings → API → Project URL / anon public key.
+   The anon key is safe to expose in client-side code ONLY because
+   Row Level Security (RLS) restricts it to read-only SELECT access —
+   see the SQL policies provided alongside this file. Do NOT use the
+   service_role key here.
+===================================================================== */
+const SUPABASE_URL = "https://zsaptqdnrnuxhvrfskxw.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzYXB0cWRucm51eGh2cmZza3h3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNjQ0MTAsImV4cCI6MjEwMTc0MDQxMH0.ob3kqRVOkiyvxPflzDojIVPKJ-t2eA6p_x9j0yfrX1Q";
+/* ===================================================================== */
+
+/* =====================================================================
+   RAW-COLUMN PARSING
+   The structured columns in dhan_trades / dhan_holdings can be wrong for
+   some rows (pdf_extractor.py's column-position heuristics don't always
+   hold). Every row also stores the original extracted cells in `raw`,
+   so we re-derive the fields we need straight from `raw` here, mirroring
+   the same logic pdf_extractor.py uses server-side. Falls back to the
+   structured columns if `raw` is missing/too short.
+===================================================================== */
+function toNum(cell) {
+  if (cell === null || cell === undefined || cell === "") return null;
+  const cleaned = String(cell).replace(/,/g, "").trim();
+  return /^-?\d+(\.\d+)?$/.test(cleaned) ? parseFloat(cleaned) : null;
+}
+
+// Pull every numeric cell out of a raw row, optionally skipping one index
+// (used to skip the B/S indicator column in derivative rows).
+function numsFromRaw(raw, skipIndex) {
+  const out = [];
+  raw.forEach((c, i) => {
+    if (i === skipIndex) return;
+    const n = toNum(c);
+    if (n !== null) out.push(n);
+  });
+  return out;
+}
+
+function deriveTrade(t) {
+  const raw = t.raw;
+  if (!Array.isArray(raw) || raw.length < 3) return t; // fallback to structured columns
+
+  const bsFlag = (raw[1] || "").toString().trim();
+  const isDerivative = ["B", "S", "BF", "CF"].includes(bsFlag);
+
+  if (isDerivative) {
+    const nums = numsFromRaw(raw, 1);
+    return {
+      ...t,
+      symbol: raw[0] || t.symbol,
+      security_name: raw[0] || t.security_name,
+      quantity: nums[0] ?? t.quantity,
+      avg_price: nums[1] ?? t.avg_price,
+      net_amount: nums.length ? nums[nums.length - 1] : t.net_amount,
+      buy_sell: ["B", "BF"].includes(bsFlag) ? "BUY" : "SELL",
+    };
+  }
+
+  // Equity layout: [ISIN, Security Name, Qty, ...prices/rates..., Net Amount]
+  const isEquity = /^IN[A-Z0-9]{10}$/.test((raw[0] || "").toString().trim());
+  const nums = numsFromRaw(raw);
+  const netAmount = nums.length ? nums[nums.length - 1] : null;
+  return {
+    ...t,
+    isin: isEquity ? raw[0] : t.isin,
+    symbol: isEquity ? (raw[1] || t.symbol) : t.symbol,
+    security_name: isEquity ? (raw[1] || t.security_name) : t.security_name,
+    quantity: nums[0] ?? t.quantity,
+    avg_price: nums[1] ?? t.avg_price,
+    net_amount: netAmount ?? t.net_amount,
+    buy_sell: netAmount !== null ? (netAmount < 0 ? "BUY" : "SELL") : t.buy_sell,
+  };
+}
+
+function deriveHolding(h) {
+  const raw = h.raw;
+  if (!Array.isArray(raw) || raw.length < 10) return h; // fallback to structured columns
+
+  // Observed layout: [S.No, ISIN, Security Name, Opening Qty, ..., Closing Qty, Price, Value]
+  const isin = /^IN[A-Z0-9]{10}$/.test((raw[1] || "").toString().trim()) ? raw[1] : h.isin;
+  return {
+    ...h,
+    isin,
+    symbol: raw[2] || h.symbol,
+    opening_qty: toNum(raw[3]) ?? h.opening_qty,
+    closing_qty: toNum(raw[9]) ?? h.closing_qty,
+  };
+}
+
+const fmtINR = (n) => {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  const v = Number(n);
+  return (v < 0 ? "-₹" : "₹") + Math.abs(v).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+};
+const fmtNum = (n) => (n === null || n === undefined || isNaN(n)) ? "—" : Number(n).toLocaleString("en-IN");
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short" }) : "—";
+
+function setStatus(state, msg) {
+  const pill = document.getElementById("status-pill");
+  pill.className = "status " + state;
+  document.getElementById("status-text").textContent = msg;
+}
+
+async function main() {
+  if (!SUPABASE_URL.includes("supabase.co") || SUPABASE_ANON_KEY.startsWith("YOUR-")) {
+    document.getElementById("config-banner").style.display = "block";
+    setStatus("err", "not configured");
+    return;
+  }
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  try {
+    const [tradesRes, ledgerRes, holdingsRes] = await Promise.all([
+      sb.from("dhan_trades").select("*").order("trade_date", { ascending: false }).limit(300),
+      sb.from("dhan_ledger_entries").select("*").order("entry_date", { ascending: true }).limit(2000),
+      sb.from("dhan_holdings").select("*").order("as_of_date", { ascending: false }).limit(500),
+    ]);
+
+    if (tradesRes.error) throw tradesRes.error;
+    if (ledgerRes.error) throw ledgerRes.error;
+    if (holdingsRes.error) throw holdingsRes.error;
+
+    const trades = tradesRes.data.map(deriveTrade);
+    const holdings = holdingsRes.data.map(deriveHolding);
+
+    setStatus("live", "live");
+    renderTicker(trades);
+    renderStats(trades, ledgerRes.data, holdings);
+    renderBalanceChart(ledgerRes.data);
+    renderDailyPnlChart(ledgerRes.data);
+    renderTradesTable(trades);
+    renderHoldingsTable(holdings);
+  } catch (err) {
+    console.error(err);
+    setStatus("err", "connection failed");
+    document.getElementById("config-banner").style.display = "block";
+    document.getElementById("config-banner").innerHTML =
+      "⚠ Could not load data: <code>" + (err.message || err) + "</code>. " +
+      "Check that SUPABASE_URL / SUPABASE_ANON_KEY are correct and that the RLS SELECT policies have been applied to the four <code>dhan_*</code> tables.";
+  }
+}
+
+function renderTicker(trades) {
+  const track = document.getElementById("ticker-track");
+  if (!trades || trades.length === 0) {
+    track.innerHTML = '<div class="ticker-item"><span class="mono" style="color:var(--muted)">No trades yet</span></div>';
+    return;
+  }
+  const items = trades.slice(0, 30).map(t => {
+    const side = (t.buy_sell || "").toUpperCase().startsWith("B") ? "B" : "S";
+    return `<div class="ticker-item">
+      <span class="sym">${t.symbol || t.security_name || "—"}</span>
+      <span class="side-${side}">${side === "B" ? "BUY" : "SELL"}</span>
+      <span class="px">${fmtNum(t.quantity)} @ ${fmtINR(t.avg_price)}</span>
+    </div>`;
+  }).join("");
+  // duplicate for seamless scroll loop
+  track.innerHTML = items + items;
+}
+
+function renderStats(trades, ledger, holdings) {
+  // Ledger balance (latest entry)
+  const lastLedger = ledger[ledger.length - 1];
+  document.getElementById("stat-balance").textContent = lastLedger ? fmtINR(lastLedger.balance) : "—";
+  document.getElementById("stat-balance-sub").textContent = lastLedger ? "as of " + fmtDate(lastLedger.entry_date) : "no ledger data";
+
+  // Net P&L across loaded ledger window
+  const totalCredit = ledger.reduce((s, e) => s + (Number(e.credit) || 0), 0);
+  const totalDebit = ledger.reduce((s, e) => s + (Number(e.debit) || 0), 0);
+  const netPnl = totalCredit - totalDebit;
+  const pnlEl = document.getElementById("stat-pnl");
+  pnlEl.textContent = fmtINR(netPnl);
+  pnlEl.className = "stat-value mono " + (netPnl >= 0 ? "up" : "down");
+  document.getElementById("stat-pnl-sub").textContent = `${ledger.length} ledger rows loaded`;
+
+  // Trades split
+  const buys = trades.filter(t => (t.buy_sell || "").toUpperCase().startsWith("B")).length;
+  const sells = trades.length - buys;
+  document.getElementById("stat-trades").textContent = fmtNum(trades.length);
+  document.getElementById("stat-trades-sub").textContent = `${buys} buy · ${sells} sell`;
+
+  // Holdings: distinct symbols in the latest as_of_date
+  const latestDate = holdings.length ? holdings[0].as_of_date : null;
+  const latestSet = new Set(holdings.filter(h => h.as_of_date === latestDate).map(h => h.symbol || h.isin));
+  document.getElementById("stat-holdings").textContent = fmtNum(latestSet.size);
+  document.getElementById("stat-holdings-sub").textContent = latestDate ? "as of " + fmtDate(latestDate) : "no data";
+}
+
+let balanceChart, dailyChart;
+
+function renderBalanceChart(ledger) {
+  const ctx = document.getElementById("chart-balance");
+  if (!ledger.length) return;
+  const labels = ledger.map(e => fmtDate(e.entry_date));
+  const data = ledger.map(e => Number(e.balance));
+  document.getElementById("ledger-range").textContent =
+    `${fmtDate(ledger[0].entry_date)} → ${fmtDate(ledger[ledger.length - 1].entry_date)}`;
+
+  balanceChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: "#5B8DEF",
+        backgroundColor: "rgba(91,141,239,0.08)",
+        borderWidth: 1.75,
+        pointRadius: 0,
+        fill: true,
+        tension: 0.25,
+      }]
+    },
+    options: chartBaseOptions(v => fmtINR(v))
+  });
+}
+
+function renderDailyPnlChart(ledger) {
+  const ctx = document.getElementById("chart-daily");
+  if (!ledger.length) return;
+  const byDay = {};
+  ledger.forEach(e => {
+    const d = e.entry_date;
+    if (!d) return;
+    byDay[d] = (byDay[d] || 0) + (Number(e.credit) || 0) - (Number(e.debit) || 0);
+  });
+  const days = Object.keys(byDay).sort();
+  const values = days.map(d => byDay[d]);
+
+  dailyChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: days.map(fmtDate),
+      datasets: [{
+        data: values,
+        backgroundColor: values.map(v => v >= 0 ? "#33D6A6" : "#FF6B81"),
+        borderRadius: 3,
+        barThickness: "flex",
+        maxBarThickness: 18,
+      }]
+    },
+    options: chartBaseOptions(v => fmtINR(v))
+  });
+}
+
+function chartBaseOptions(tickFormatter) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: "#161C27", borderColor: "#212836", borderWidth: 1,
+      titleFont: { family: "IBM Plex Mono" }, bodyFont: { family: "IBM Plex Mono" },
+      callbacks: { label: (ctx) => tickFormatter(ctx.parsed.y) }
+    }},
+    scales: {
+      x: { grid: { color: "#1A202C" }, ticks: { color: "#6E7887", font: { family: "IBM Plex Mono", size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } },
+      y: { grid: { color: "#1A202C" }, ticks: { color: "#6E7887", font: { family: "IBM Plex Mono", size: 10 }, callback: tickFormatter } }
+    }
+  };
+}
+
+function renderTradesTable(trades) {
+  const body = document.getElementById("trades-body");
+  document.getElementById("trades-count-hint").textContent = trades.length + " loaded";
+  if (!trades.length) {
+    body.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="big">∅</div>No trades in the database yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = trades.slice(0, 100).map(t => {
+    const side = (t.buy_sell || "").toUpperCase().startsWith("B") ? "B" : "S";
+    return `<tr>
+      <td>${fmtDate(t.trade_date)}</td>
+      <td>${t.symbol || t.security_name || "—"}</td>
+      <td><span class="pill pill-${side}">${side === "B" ? "BUY" : "SELL"}</span></td>
+      <td>${t.exchange || "—"}</td>
+      <td class="num">${fmtNum(t.quantity)}</td>
+      <td class="num">${fmtINR(t.avg_price)}</td>
+      <td class="num">${fmtINR(t.net_amount)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderHoldingsTable(holdings) {
+  const body = document.getElementById("holdings-body");
+  if (!holdings.length) {
+    body.innerHTML = '<tr><td colspan="4" class="empty-state"><div class="big">∅</div>No holdings recorded yet.</td></tr>';
+    return;
+  }
+  const latestDate = holdings[0].as_of_date;
+  document.getElementById("holdings-date-hint").textContent = fmtDate(latestDate);
+  const latest = holdings.filter(h => h.as_of_date === latestDate);
+  body.innerHTML = latest.map(h => `
+    <tr>
+      <td>${h.symbol || "—"}</td>
+      <td>${h.isin || "—"}</td>
+      <td class="num">${fmtNum(h.opening_qty)}</td>
+      <td class="num">${fmtNum(h.closing_qty)}</td>
+    </tr>
+  `).join("");
+}
+
+main();
+</script>
+</body>
+</html>
