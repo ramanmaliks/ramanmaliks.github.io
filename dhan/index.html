@@ -11,15 +11,20 @@
 <style>
 :root{--bg:#071018;--panel:#0d1721;--panel2:#111e2a;--line:#203040;--text:#e8f0f7;--muted:#7f91a3;--green:#27d3a2;--red:#ff6f87;--blue:#5d92ff;--amber:#f3bd54;--shadow:0 16px 40px rgba(0,0,0,.18)}
 *{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at top,#0b1824 0,#071018 38%,#050b11 100%);color:var(--text);font-family:'DM Sans',sans-serif}body{min-height:100vh}
-.wrap{max-width:1450px;margin:auto;padding:28px 22px 60px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px}.eyebrow{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--blue);text-transform:uppercase}.title{font:700 34px 'Space Grotesk';margin-top:5px}.subtitle{color:var(--muted);font-size:13px;margin-top:5px}.status{font:600 12px 'IBM Plex Mono';display:flex;gap:8px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}.live .dot{background:var(--green);box-shadow:0 0 0 4px rgba(39,211,162,.12)}.err .dot{background:var(--red)}
+.wrap{width:100%;max-width:1450px;margin:0 auto;padding:28px 22px 60px;overflow-x:hidden}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px}.eyebrow{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--blue);text-transform:uppercase}.title{font:700 34px 'Space Grotesk';margin-top:5px}.subtitle{color:var(--muted);font-size:13px;margin-top:5px}.status{font:600 12px 'IBM Plex Mono';display:flex;gap:8px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}.live .dot{background:var(--green);box-shadow:0 0 0 4px rgba(39,211,162,.12)}.err .dot{background:var(--red)}
 .toolbar{background:rgba(13,23,33,.88);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:14px;display:grid;grid-template-columns:1.15fr 1.15fr 1fr 1fr auto;gap:10px;margin-bottom:18px;backdrop-filter:blur(10px)}.field label{display:block;font:600 10px 'IBM Plex Mono';color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px 2px}.select,.date{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 11px;font:500 13px 'IBM Plex Mono';outline:none}.select:focus,.date:focus{border-color:var(--blue)}button{border:0;border-radius:9px;padding:0 15px;background:var(--blue);color:white;font-weight:700;cursor:pointer}.ghost{background:var(--panel2);border:1px solid var(--line)}
 .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}.card{background:linear-gradient(180deg,rgba(14,25,36,.98),rgba(10,19,28,.98));border:1px solid var(--line);border-radius:13px;padding:15px;box-shadow:var(--shadow)}.label{font:600 10px 'IBM Plex Mono';letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.value{font:600 23px 'IBM Plex Mono';margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{margin-top:6px;color:var(--muted);font-size:11px}.up{color:var(--green)}.down{color:var(--red)}
-.grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}.panel{background:rgba(13,23,33,.96);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}.ph{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.ph h2{font:600 15px 'Space Grotesk';margin:0}.hint{font:11px 'IBM Plex Mono';color:var(--muted)}.pb{padding:15px}.chart{height:290px}.chart.tall{height:330px}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;min-width:0}.full-width-panel{grid-column:1 / -1;width:100%;min-width:0}.panel{background:rgba(13,23,33,.96);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}.ph{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.ph h2{font:600 15px 'Space Grotesk';margin:0}.hint{font:11px 'IBM Plex Mono';color:var(--muted)}.pb{padding:15px}.chart{height:290px}.chart.tall{height:330px}
 .statsline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px}.mini .k{font:10px 'IBM Plex Mono';color:var(--muted);text-transform:uppercase}.mini .v{font:600 16px 'IBM Plex Mono';margin-top:4px}
-table{width:100%;border-collapse:collapse;font-size:12px}thead th{position:sticky;top:0;background:var(--panel);text-align:left;padding:10px 12px;color:var(--muted);font:600 10px 'IBM Plex Mono';text-transform:uppercase;border-bottom:1px solid var(--line)}tbody td{padding:10px 12px;border-bottom:1px solid #162533;font-family:'IBM Plex Mono';white-space:nowrap}tbody tr:hover{background:#111d29}.num{text-align:right}.pill{font-size:10px;font-weight:700;border-radius:99px;padding:3px 7px}.buy{background:rgba(39,211,162,.12);color:var(--green)}.sell{background:rgba(255,111,135,.12);color:var(--red)}.broker{background:rgba(93,146,255,.12);color:#8eb4ff}.tablewrap{max-height:390px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}thead th{position:sticky;top:0;background:var(--panel);text-align:left;padding:10px 12px;color:var(--muted);font:600 10px 'IBM Plex Mono';text-transform:uppercase;border-bottom:1px solid var(--line)}tbody td{padding:10px 12px;border-bottom:1px solid #162533;font-family:'IBM Plex Mono';white-space:nowrap}tbody tr:hover{background:#111d29}.num{text-align:right}.pill{font-size:10px;font-weight:700;border-radius:99px;padding:3px 7px}.buy{background:rgba(39,211,162,.12);color:var(--green)}.sell{background:rgba(255,111,135,.12);color:var(--red)}.broker{background:rgba(93,146,255,.12);color:#8eb4ff}.tablewrap{width:100%;max-width:100%;max-height:390px;overflow:auto;-webkit-overflow-scrolling:touch}.tablewrap table{min-width:0}
+.current-equity-wrap{max-height:360px}.current-equity-panel tbody tr.position-positive{background:rgba(39,211,162,.035)}.current-equity-panel td.inhand{font-weight:700;color:var(--green)}.equity-wrap{max-height:520px;overflow-x:auto}.equity-panel{min-width:0}.equity-panel table{min-width:1700px;width:max-content}.equity-panel tbody tr.equity-group{background:rgba(93,146,255,.045)}.equity-panel tbody tr.detail{background:rgba(255,255,255,.015)}.equity-panel tbody tr.detail td{font-size:11px}.equity-name{font-weight:700}.inhand{font-weight:700}.section-badge{font:600 10px 'IBM Plex Mono';color:var(--blue);border:1px solid rgba(93,146,255,.35);padding:3px 7px;border-radius:999px;margin-left:8px}.expand-btn{background:transparent;border:1px solid var(--line);color:var(--muted);padding:4px 7px;border-radius:7px;font:600 10px 'IBM Plex Mono';cursor:pointer}.expand-btn:hover{color:var(--text);border-color:var(--blue)}
+.performance-panel{grid-column:1 / -1}.performance-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.performance-grid .mini{min-width:0}.performance-grid .v{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.perf-na{color:var(--muted)}
+@media(max-width:1200px){.performance-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.performance-grid{grid-template-columns:repeat(2,1fr)}}
 .notice{display:none;background:#2b2110;color:var(--amber);border:1px solid #5b4617;border-radius:10px;padding:11px 13px;margin-bottom:16px;font:500 12px 'IBM Plex Mono';line-height:1.5}.foot{color:var(--muted);font-size:11px;text-align:center;margin-top:15px;font-family:'IBM Plex Mono'}.empty{text-align:center;color:var(--muted);padding:30px}.muted{color:var(--muted)}
 @media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}.toolbar{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 @media(max-width:650px){.wrap{padding:18px 12px 45px}.title{font-size:27px}.top{align-items:flex-start;flex-direction:column}.toolbar{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.statsline{grid-template-columns:1fr 1fr}.chart{height:240px}}
+html,body{max-width:100%;overflow-x:hidden} .panel,.card,.toolbar,.grid,.cards{min-width:0} @media(max-width:900px){.equity-panel .ph{flex-wrap:wrap;gap:8px}.equity-panel table{min-width:1500px}}
 </style>
 </head>
 <body>
@@ -47,17 +52,51 @@ table{width:100%;border-collapse:collapse;font-size:12px}thead th{position:stick
     <div class="card"><div class="label">Win Rate</div><div id="winrate" class="value">—</div><div id="winrateSub" class="sub">Closed FIFO lots</div></div>
   </section>
 
+  <div class="panel performance-panel full-width-panel">
+    <div class="ph"><h2>Trading Performance</h2><span class="hint">Calculated from matched FIFO trades for the selected broker / period</span></div>
+    <div class="pb">
+      <div class="performance-grid">
+        <div class="mini"><div class="k">Total Trades</div><div id="perfTotalTrades" class="v">—</div></div>
+        <div class="mini"><div class="k">Winning Trades</div><div id="perfWinningTrades" class="v up">—</div></div>
+        <div class="mini"><div class="k">Losing Trades</div><div id="perfLosingTrades" class="v down">—</div></div>
+        <div class="mini"><div class="k">Win Rate %</div><div id="perfWinRate" class="v">—</div></div>
+        <div class="mini"><div class="k">Total Net P/L</div><div id="perfNetPL" class="v">—</div></div>
+        <div class="mini"><div class="k">Average Win</div><div id="perfAvgWin" class="v up">—</div></div>
+        <div class="mini"><div class="k">Average Loss</div><div id="perfAvgLoss" class="v down">—</div></div>
+        <div class="mini"><div class="k">Expectancy</div><div id="perfExpectancy" class="v">—</div></div>
+        <div class="mini"><div class="k">Max Drawdown</div><div id="perfMaxDD" class="v down">—</div></div>
+        <div class="mini"><div class="k">Best Trade</div><div id="perfBest" class="v up">—</div></div>
+        <div class="mini"><div class="k">Worst Trade</div><div id="perfWorst" class="v down">—</div></div>
+        <div class="mini"><div class="k">Average R Multiple</div><div id="perfAvgR" class="v perf-na" title="Requires stop-loss / risk data, which is not stored in all_transactions.">N/A</div></div>
+        <div class="mini"><div class="k">Profit Factor</div><div id="perfProfitFactor" class="v">—</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="grid">
     <div>
       <div class="panel"><div class="ph"><h2>Cumulative Realized P&amp;L</h2><span id="rangeHint" class="hint">—</span></div><div class="pb"><div class="chart tall"><canvas id="pnlChart"></canvas></div></div></div>
       <div class="panel"><div class="ph"><h2>Daily P&amp;L</h2><span class="hint">FIFO realized, net of charges</span></div><div class="pb"><div class="chart"><canvas id="dailyChart"></canvas></div></div></div>
-      <div class="panel"><div class="ph"><h2>Recent Transactions</h2><span id="countHint" class="hint">—</span></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Broker</th><th>Symbol</th><th>Type</th><th>Side</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Leg</th><th class="num">Charges</th></tr></thead><tbody id="txBody"></tbody></table></div></div>
     </div>
     <div>
       <div class="panel"><div class="ph"><h2>Performance Snapshot</h2><span class="hint">filtered</span></div><div class="pb"><div class="statsline"><div class="mini"><div class="k">Closed Lots</div><div id="closed" class="v">—</div></div><div class="mini"><div class="k">Wins</div><div id="wins" class="v up">—</div></div><div class="mini"><div class="k">Losses</div><div id="losses" class="v down">—</div></div><div class="mini"><div class="k">Open Qty</div><div id="openQty" class="v">—</div></div></div></div></div>
       <div class="panel"><div class="ph"><h2>Broker Comparison</h2><span class="hint">net realized P&amp;L</span></div><div class="pb"><div class="chart"><canvas id="brokerChart"></canvas></div></div></div>
       <div class="panel"><div class="ph"><h2>Top / Bottom Symbols</h2><span class="hint">realized contribution</span></div><div class="tablewrap"><table><thead><tr><th>Symbol</th><th>Broker</th><th class="num">Closed</th><th class="num">P&amp;L</th></tr></thead><tbody id="symbolBody"></tbody></table></div></div>
       <div class="panel"><div class="ph"><h2>Data Coverage</h2><span class="hint">all_transactions</span></div><div class="pb"><div class="muted" id="coverage">Loading…</div></div></div>
+    </div>
+
+    <div class="panel equity-panel full-width-panel"><div class="ph"><h2>Equity (Stocks)</h2><span id="equityHint" class="hint">Stocks only · filtered by broker / period</span></div><div class="tablewrap equity-wrap"><table><thead><tr><th>Name</th><th>InHand</th><th class="num">Buy</th><th class="num">Sell</th><th class="num">Avg Price</th><th class="num">Avg Buy Price</th><th class="num">Avg Sell Price</th><th class="num">Total Charges</th><th>Transaction Date</th><th>Company Name</th><th>Exchange</th><th>Type</th><th class="num">Quantity</th><th class="num">Price</th><th class="num">Tax/Charges</th><th class="num">Brokerage</th><th>Remarks</th></tr></thead><tbody id="equityBody"></tbody></table></div></div>
+
+    <div class="panel full-width-panel"><div class="ph"><h2>Recent Transactions</h2><span id="countHint" class="hint">—</span></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Broker</th><th>Symbol</th><th>Type</th><th>Side</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Leg</th><th class="num">Charges</th></tr></thead><tbody id="txBody"></tbody></table></div></div>
+
+    <div class="panel full-width-panel current-equity-panel">
+      <div class="ph"><h2>Equities In Hand — Current</h2><span id="currentEquityHint" class="hint">Based on all historical equity transactions · period filter ignored</span></div>
+      <div class="tablewrap current-equity-wrap">
+        <table>
+          <thead><tr><th>Broker</th><th>Name</th><th class="num">InHand</th><th class="num">Avg Buy Price</th><th class="num">In-Hand Cost</th><th>Last Transaction</th><th>Exchange</th><th>Type</th></tr></thead>
+          <tbody id="currentEquityBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div class="foot" id="footer">Loading directly from Supabase…</div>
@@ -92,6 +131,119 @@ function dateFilter(){const p=$('period').value;let min=null,max=null;const toda
 function filtered(){const b=$('broker').value;const f=dateFilter();return ALL.filter(r=>(b==='ALL'||r.broker===b)&&(!f.min||r.transaction_date>=f.min)&&(!f.max||r.transaction_date<=f.max))}
 function destroy(name){if(charts[name]){charts[name].destroy();charts[name]=null}}
 function chartOpts(){return {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0b1620',borderColor:'#203040',borderWidth:1,titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono'}}},scales:{x:{grid:{color:'#172634'},ticks:{color:'#71869a',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:8}},y:{grid:{color:'#172634'},ticks:{color:'#71869a',font:{family:'IBM Plex Mono',size:10},callback:v=>money(v)}}}}}
+function renderEquity(rows){
+  const body=$('equityBody');
+  const equity=rows.filter(r=>!r.option_type && r.symbol);
+  const groups=new Map();
+  for(const r of equity){
+    // Group an equity by broker + stock, NOT by exchange.
+    // 5Paisa can contain the same stock traded on both NSE and BSE;
+    // those transactions belong to one stock position.
+    const k=[r.broker,(r.symbol||'').trim().toUpperCase()].join('|');
+    if(!groups.has(k)) groups.set(k,{broker:r.broker,symbol:r.symbol,exchangeSet:new Set(),buyQty:0,sellQty:0,buyValue:0,sellValue:0,charges:0,latest:r.transaction_date,rows:[],company:r.symbol,remarks:new Set()});
+    const g=groups.get(k);
+    g.rows.push(r);
+    if(r.exchange) g.exchangeSet.add(r.exchange);
+    g.latest=r.transaction_date>g.latest?r.transaction_date:g.latest;
+    if(r.side==='BUY'){g.buyQty+=r.quantity;g.buyValue+=r.quantity*r.price}else if(r.side==='SELL'){g.sellQty+=r.quantity;g.sellValue+=r.quantity*r.price}
+    g.charges+=r.brokerage+r.taxes_charges;
+    if(r.remarks) g.remarks.add(r.remarks);
+  }
+  const gs=[...groups.values()].sort((a,b)=>a.symbol.localeCompare(b.symbol)||a.broker.localeCompare(b.broker));
+  $('equityHint').textContent=`${gs.length} stock position${gs.length===1?'':'s'} · ${equity.length} transaction${equity.length===1?'':'s'}`;
+  if(!gs.length){body.innerHTML='<tr><td colspan="17" class="empty">No equity (stock) transactions match the selected broker / period.</td></tr>';return}
+  let html='';
+  gs.forEach((g,idx)=>{
+    const inHand=g.buyQty-g.sellQty, avgPrice=inHand>0?((g.buyValue-g.sellValue)/inHand):0, avgBuy=g.buyQty?g.buyValue/g.buyQty:0, avgSell=g.sellQty?g.sellValue/g.sellQty:0;
+    const id='eq'+idx;
+    const remarks=[...g.remarks].join(' · ')||'—';
+    html+=`<tr class="equity-group"><td class="equity-name"><button class="expand-btn" data-eq="${id}">+</button> ${g.symbol} <span class="pill broker">${g.broker}</span></td><td class="num inhand ${inHand<0?'down':'up'}">${num(inHand)}</td><td class="num">${num(g.buyQty)}</td><td class="num">${num(g.sellQty)}</td><td class="num">${money(avgPrice)}</td><td class="num">${money(avgBuy)}</td><td class="num">${money(avgSell)}</td><td class="num">${money(g.charges)}</td><td>${dstr(g.latest)}</td><td>${g.company}</td><td>${[...g.exchangeSet].sort().join(' / ')||'—'}</td><td>Equity</td><td class="num">${num(g.buyQty+g.sellQty)}</td><td class="num">${money((g.buyValue+g.sellValue)/(g.buyQty+g.sellQty||1))}</td><td class="num">${money(g.rows.reduce((s,r)=>s+r.taxes_charges,0))}</td><td class="num">${money(g.rows.reduce((s,r)=>s+r.brokerage,0))}</td><td>${remarks}</td></tr>`;
+    html+=g.rows.slice().sort((a,b)=>b.transaction_date.localeCompare(a.transaction_date)||b.id-a.id).map(r=>`<tr class="detail" data-parent="${id}" hidden><td>↳ ${r.symbol}</td><td></td><td class="num">${r.side==='BUY'?num(r.quantity):''}</td><td class="num">${r.side==='SELL'?num(r.quantity):''}</td><td class="num">${money(r.price)}</td><td class="num">${r.side==='BUY'?money(r.price):''}</td><td class="num">${r.side==='SELL'?money(r.price):''}</td><td class="num">${money(r.brokerage+r.taxes_charges)}</td><td>${dstr(r.transaction_date)}</td><td>${r.symbol||'—'}</td><td>${r.exchange||'—'}</td><td>Equity</td><td class="num">${num(r.quantity)}</td><td class="num">${money(r.price)}</td><td class="num">${money(r.taxes_charges)}</td><td class="num">${money(r.brokerage)}</td><td>${r.remarks||'—'}</td></tr>`).join('');
+  });
+  body.innerHTML=html;
+  body.querySelectorAll('.expand-btn').forEach(btn=>btn.onclick=()=>{
+    const id=btn.dataset.eq, opened=btn.textContent==='−';btn.textContent=opened?'+':'−';body.querySelectorAll(`[data-parent="${id}"]`).forEach(tr=>tr.hidden=opened);
+  });
+}
+function renderCurrentEquity(){
+  const body=$('currentEquityBody');
+  const brokerFilter=$('broker').value;
+  const equity=ALL.filter(r=>(!brokerFilter||brokerFilter==='ALL'||r.broker===brokerFilter)&&!r.option_type&&r.symbol);
+  const books=new Map();
+  for(const r of equity.sort((a,b)=>(a.transaction_date+'|'+String(a.id)).localeCompare(b.transaction_date+'|'+String(b.id)))){
+    const k=[r.broker,(r.symbol||'').trim().toUpperCase()].join('|');
+    if(!books.has(k)) books.set(k,{broker:r.broker,symbol:r.symbol,buyLots:[],exchangeSet:new Set(),latest:r.transaction_date});
+    const g=books.get(k);
+    if(r.exchange) g.exchangeSet.add(r.exchange);
+    if(r.transaction_date>g.latest) g.latest=r.transaction_date;
+    if(r.side==='BUY'){
+      if(r.quantity>0) g.buyLots.push({qty:r.quantity,price:r.price});
+    }else if(r.side==='SELL'){
+      let remain=r.quantity;
+      while(remain>0&&g.buyLots.length){
+        const lot=g.buyLots[0];
+        const used=Math.min(remain,lot.qty);
+        lot.qty-=used; remain-=used;
+        if(lot.qty<=1e-9) g.buyLots.shift();
+      }
+    }
+  }
+  const positions=[...books.values()].map(g=>{
+    const qty=g.buyLots.reduce((s,l)=>s+l.qty,0);
+    const cost=g.buyLots.reduce((s,l)=>s+l.qty*l.price,0);
+    return {...g,qty,cost,avg:qty?cost/qty:0};
+  }).filter(g=>g.qty>1e-9).sort((a,b)=>a.symbol.localeCompare(b.symbol)||a.broker.localeCompare(b.broker));
+
+  $('currentEquityHint').textContent=`${positions.length} current stock position${positions.length===1?'':'s'} · all dates used · broker filter ${brokerFilter==='ALL'?'ALL':brokerFilter}`;
+  if(!positions.length){
+    body.innerHTML='<tr><td colspan="8" class="empty">No equities currently in hand for the selected broker.</td></tr>';
+    return;
+  }
+  body.innerHTML=positions.map(g=>`<tr class="position-positive"><td><span class="pill broker">${g.broker}</span></td><td class="equity-name">${g.symbol}</td><td class="num inhand">${num(g.qty)}</td><td class="num">${money(g.avg)}</td><td class="num">${money(g.cost)}</td><td>${dstr(g.latest)}</td><td>${[...g.exchangeSet].sort().join(' / ')||'—'}</td><td>Equity</td></tr>`).join('');
+}
+
+function renderPerformance(rows,res){
+  const trades=res.closed||[];
+  const wins=trades.filter(x=>x.pnl>0), losses=trades.filter(x=>x.pnl<0);
+  const total=trades.length, winning=wins.length, losing=losses.length, winRate=total?(winning/total)*100:0;
+  const grossWin=wins.reduce((s,x)=>s+x.pnl,0), grossLossAbs=Math.abs(losses.reduce((s,x)=>s+x.pnl,0));
+  const avgWin=winning?grossWin/winning:0, avgLoss=losing?grossLossAbs/losing:0;
+  const expectancy=total?(grossWin-grossLossAbs)/total:0;
+  const netPL=grossWin-grossLossAbs-(res.charges||0);
+  const profitFactor=grossLossAbs>0?grossWin/grossLossAbs:null;
+  const best=winning?Math.max(...wins.map(x=>x.pnl)):0;
+  const worst=losing?Math.min(...losses.map(x=>x.pnl)):0;
+
+  // Build a daily net P/L curve using the same filtered rows.
+  const dailyGross={}; const dailyCharges={};
+  for(const r of rows){
+    if(!r.transaction_date) continue;
+    dailyGross[r.transaction_date]=(dailyGross[r.transaction_date]||0);
+    dailyCharges[r.transaction_date]=(dailyCharges[r.transaction_date]||0)+(r.brokerage+r.taxes_charges);
+  }
+  for(const d of Object.keys(res.daily||{})) dailyGross[d]=res.daily[d]||0;
+  let equity=0,peak=0,maxDD=0;
+  for(const d of Object.keys(dailyGross).sort()){
+    equity += (dailyGross[d]||0) - (dailyCharges[d]||0);
+    if(equity>peak) peak=equity;
+    const dd=peak-equity;
+    if(dd>maxDD) maxDD=dd;
+  }
+
+  $('perfTotalTrades').textContent=num(total);
+  $('perfWinningTrades').textContent=num(winning);
+  $('perfLosingTrades').textContent=num(losing);
+  $('perfWinRate').textContent=winRate.toFixed(1)+'%';
+  $('perfNetPL').textContent=money(netPL);
+  $('perfNetPL').className='v '+(netPL>=0?'up':'down');
+  $('perfAvgWin').textContent=winning?money(avgWin):'—';
+  $('perfAvgLoss').textContent=losing?'-'+money(avgLoss).replace('-',''):'—';
+  $('perfExpectancy').textContent=total?money(expectancy):'—';
+  $('perfMaxDD').textContent=maxDD>0?'-'+money(maxDD).replace('-',''):'₹0';
+  $('perfBest').textContent=winning?money(best):'—';
+  $('perfWorst').textContent=losing?'-'+money(Math.abs(worst)).replace('-',''):'—';
+  $('perfProfitFactor').textContent=profitFactor===null?'∞':profitFactor.toFixed(2);
+}
 function render(){
   const rows=filtered(), f=dateFilter(), res=fifo(rows), gross=res.closed.reduce((s,x)=>s+x.pnl,0), net=gross-res.charges, turnover=rows.reduce((s,r)=>s+r.leg_value,0), buys=rows.filter(r=>r.side==='BUY').length, sells=rows.filter(r=>r.side==='SELL').length, wins=res.closed.filter(x=>x.pnl>0).length, losses=res.closed.filter(x=>x.pnl<0).length, wr=(wins+losses)?wins/(wins+losses)*100:0;
   $('pnl').textContent=money(net);$('pnl').className='value '+(net>=0?'up':'down');$('gross').textContent=money(gross);$('gross').className='value '+(gross>=0?'up':'down');$('charges').textContent=money(res.charges);$('turnover').textContent=money(turnover);$('txns').textContent=num(rows.length);$('txnsSub').textContent=buys+' BUY · '+sells+' SELL';$('winrate').textContent=(wr?wr.toFixed(1):'0.0')+'%';$('closed').textContent=num(res.closed.reduce((s,x)=>s+x.qty,0));$('wins').textContent=num(wins);$('losses').textContent=num(losses);$('openQty').textContent=num(res.openQty);$('pnlSub').textContent=`${res.closed.length.toLocaleString('en-IN')} matched executions · charges deducted`;
@@ -100,6 +252,9 @@ function render(){
   destroy('pnl'); charts.pnl=new Chart($('pnlChart'),{type:'line',data:{labels:days.map(dstr),datasets:[{data:cum,borderColor:'#5d92ff',backgroundColor:'rgba(93,146,255,.10)',fill:true,tension:.24,pointRadius:0,borderWidth:2}]},options:chartOpts()});
   destroy('daily'); charts.daily=new Chart($('dailyChart'),{type:'bar',data:{labels:days.map(dstr),datasets:[{data:vals,backgroundColor:vals.map(v=>v>=0?'#27d3a2':'#ff6f87'),borderRadius:4}]},options:chartOpts()});
   const brokers={};for(const r of res.closed){brokers[r.broker]=(brokers[r.broker]||0)+r.pnl}const bk=Object.keys(brokers);destroy('broker');charts.broker=new Chart($('brokerChart'),{type:'bar',data:{labels:bk,datasets:[{data:bk.map(k=>brokers[k]),backgroundColor:bk.map(k=>brokers[k]>=0?'#27d3a2':'#ff6f87'),borderRadius:6}]},options:chartOpts()});
+  renderPerformance(rows,res);
+  renderEquity(rows);
+  renderCurrentEquity();
   $('txBody').innerHTML=rows.slice().sort((a,b)=>b.transaction_date.localeCompare(a.transaction_date)||b.id-a.id).slice(0,150).map(r=>`<tr><td>${dstr(r.transaction_date)}</td><td><span class="pill broker">${r.broker}</span></td><td>${r.symbol||'—'} ${r.strike_price?'<span class="muted">'+r.strike_price+'</span>':''}</td><td>${r.option_type||'—'}</td><td><span class="pill ${r.side==='BUY'?'buy':'sell'}">${r.side}</span></td><td class="num">${num(r.quantity)}</td><td class="num">${money(r.price)}</td><td class="num">${money(r.leg_value)}</td><td class="num">${money(r.brokerage+r.taxes_charges)}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">No transactions match the selected filters.</td></tr>';
   const syms=Object.values(res.bySymbol).sort((a,b)=>b.pnl-a.pnl);$('symbolBody').innerHTML=syms.slice(0,14).map(x=>`<tr><td>${x.symbol}</td><td>${x.broker}</td><td class="num">${num(x.closed)}</td><td class="num ${x.pnl>=0?'up':'down'}">${money(x.pnl)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No closed positions in this range.</td></tr>';
   const allMin=ALL.reduce((m,r)=>!m||r.transaction_date<m?r.transaction_date:m,null), allMax=ALL.reduce((m,r)=>!m||r.transaction_date>m?r.transaction_date:m,null);$('coverage').innerHTML=`<b>${ALL.length.toLocaleString('en-IN')}</b> transactions · <b>${new Set(ALL.map(r=>r.broker)).size}</b> brokers · coverage <b>${dstr(allMin)}</b> → <b>${dstr(allMax)}</b><br><span class="muted">Filtered view: ${rows.length.toLocaleString('en-IN')} transactions.</span>`;
